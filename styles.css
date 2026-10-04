@@ -1,0 +1,531 @@
+/* ==============================================================
+   VisionOS / macOS Liquid Glass Design System
+   --------------------------------------------------------------
+   Author: JARVIS Code-Agent
+   Description: Comprehensive CSS for ultra‑deep translucent blurs,
+                specular highlights, iridescent ambient mesh gradients,
+                fluid glow borders, responsive layout, and micro‑animations.
+   ============================================================== */
+
+/* --------------------------------------------------------------
+   Root Variables – Color Palette, Blur, Shadows, Transitions
+   -------------------------------------------------------------- */
+:root {
+  /* Core Colors */
+  --color-primary: #0a84ff;               /* Apple Blue */
+  --color-secondary: #5ac8fa;             /* Light Aqua */
+  --color-accent: #ff2d55;                /* Apple Red */
+  --color-background: #0c0c0e;           /* Dark Mode Base */
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-glass: rgba(255, 255, 255, 0.12);
+  --color-glass-hover: rgba(255, 255, 255, 0.18);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #c7c7cc;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-shadow: rgba(0, 0, 0, 0.6);
+
+  /* Blur & Transparency */
+  --glass-blur: 16px;
+  --glass-blur-hover: 20px;
+  --glass-opacity: 0.45;
+  --glass-opacity-hover: 0.55;
+
+  /* Gradients */
+  --gradient-ambient: linear-gradient(
+    135deg,
+    rgba(10, 132, 255, 0.2) 0%,
+    rgba(90, 200, 250, 0.15) 45%,
+    rgba(255, 45, 85, 0.1) 100%
+  );
+
+  /* Shadows */
+  --shadow-glass: 0 8px 32px var(--color-shadow);
+  --shadow-elevated: 0 12px 48px rgba(0, 0, 0, 0.7);
+
+  /* Border Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transition Timings */
+  --transition-fast: 0.15s ease-out;
+  --transition-medium: 0.3s ease-out;
+  --transition-slow: 0.45s ease-out;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'SF Pro Display', var(--font-sans);
+}
+
+/* --------------------------------------------------------------
+   Global Reset & Base Styles
+   -------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------
+   Utility Classes
+   -------------------------------------------------------------- */
+.u-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.u-text-center { text-align: center; }
+.u-w-100 { width: 100%; }
+.u-h-100 { height: 100%; }
+.u-relative { position: relative; }
+.u-absolute { position: absolute; }
+.u-fixed { position: fixed; }
+.u-pointer { cursor: pointer; }
+.u-select-none { user-select: none; }
+.u-overflow-hidden { overflow: hidden; }
+.u-overflow-auto { overflow: auto; }
+.u-transition { transition: all var(--transition-medium); }
+
+/* --------------------------------------------------------------
+   Glassmorphism Core
+   -------------------------------------------------------------- */
+.glass {
+  background: var(--color-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glass);
+  color: var(--color-text-primary);
+  transition: backdrop-filter var(--transition-fast),
+              background var(--transition-fast),
+              border-color var(--transition-fast);
+}
+.glass:hover,
+.glass:focus-within {
+  background: var(--color-glass-hover);
+  backdrop-filter: blur(var(--glass-blur-hover));
+  -webkit-backdrop-filter: blur(var(--glass-blur-hover));
+}
+
+/* --------------------------------------------------------------
+   Layout Containers
+   -------------------------------------------------------------- */
+.container {
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 2vw, 2rem);
+  padding-right: clamp(1rem, 2vw, 2rem);
+}
+
+/* --------------------------------------------------------------
+   Navbar – Floating Glass Navigation
+   -------------------------------------------------------------- */
+.navbar {
+  @extend .glass;
+  position: sticky;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: calc(100% - 2rem);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.navbar .logo {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.navbar .nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+.navbar .nav-links a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+}
+.navbar .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transition: width var(--transition-fast);
+}
+.navbar .nav-links a:hover::after,
+.navbar .nav-links a:focus::after {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------
+   Sidebar – Collapsible Glass Panel
+   -------------------------------------------------------------- */
+.sidebar {
+  @extend .glass;
+  position: fixed;
+  top: 0;
+  left: -280px;
+  height: 100vh;
+  width: 260px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: left var(--transition-medium);
+  z-index: 999;
+}
+.sidebar.open {
+  left: 0;
+}
+.sidebar .close-btn {
+  align-self: flex-end;
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------
+   Hero Section – Parallax & Ambient Mesh Gradient
+   -------------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4rem 1rem;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-ambient);
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+  z-index: -2;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('https://source.unsplash.com/1600x900/?technology,ai') center/cover no-repeat;
+  filter: blur(8px) brightness(0.6);
+  z-index: -1;
+}
+.hero .content {
+  max-width: 800px;
+  text-align: center;
+  color: var(--color-text-primary);
+}
+.hero .content h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero .content p {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: var(--color-text-secondary);
+}
+.hero .cta-btn {
+  @extend .glass;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.hero .cta-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------
+   Card Component – Liquid Glass
+   -------------------------------------------------------------- */
+.card {
+  @extend .glass;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elevated);
+}
+.card .card-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.card .card-body {
+  flex: 1;
+  color: var(--color-text-secondary);
+}
+.card .card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* --------------------------------------------------------------
+   Dashboard Grid
+   -------------------------------------------------------------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+/* --------------------------------------------------------------
+   Modal – Glass Manager
+   -------------------------------------------------------------- */
+.modal-backdrop {
+  @extend .glass;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-medium);
+}
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal {
+  @extend .glass;
+  max-width: 720px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  animation: modalFadeIn 0.35s var(--transition-fast) forwards;
+}
+.modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.modal .modal-header h2 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+.modal .modal-close {
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.modal .modal-body {
+  color: var(--color-text-primary);
+}
+
+/* --------------------------------------------------------------
+   Toast Notifications
+   -------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 3000;
+}
+.toast {
+  @extend .glass;
+  min-width: 260px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: toastSlideIn 0.4s var(--transition-fast) forwards;
+}
+.toast.success { border-left: 4px solid #34c759; }
+.toast.error   { border-left: 4px solid #ff3b30; }
+.toast.info    { border-left: 4px solid #5ac8fa; }
+.toast .icon {
+  font-size: 1.25rem;
+}
+.toast .message {
+  flex: 1;
+}
+
+/* --------------------------------------------------------------
+   Command Palette (Cmd/Ctrl+K)
+   -------------------------------------------------------------- */
+.command-palette {
+  @extend .glass;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  width: 90%;
+  max-width: 720px;
+  max-height: 70vh;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-medium), transform var(--transition-medium);
+  z-index: 2500;
+}
+.command-palette.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(1);
+}
+.command-palette input {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  outline: none;
+}
+.command-palette .results {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.command-palette .result-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.command-palette .result-item:hover,
+.command-palette .result-item.active {
+  background: var(--color-glass-hover);
+}
+
+/* --------------------------------------------------------------
+   Footer – VisionOS Inspired
+   -------------------------------------------------------------- */
+.footer {
+  @extend .glass;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border);
+}
+.footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------
+   Animations – Keyframes
+   -------------------------------------------------------------- */
+@keyframes gradientShift {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes pulseGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(10,132,255,0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(10,132,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(10,132,255,0); }
+}
+
+/* --------------------------------------------------------------
+   Responsive Adjustments
+   -------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .navbar .nav-links { gap: 1rem; }
+  .hero { min-height: 60vh; }
+}
+@media (max-width: 768px) {
+  .navbar { flex-direction: column; gap: 0.5rem; }
+  .sidebar { width: 220px; }
+  .hero .content h1 { font-size: clamp(2rem, 8vw, 3rem); }
+}
+@media (max-width: 480px) {
+  .navbar .nav-links { flex-direction: column; align-items: center; }
+  .hero { padding: 3rem 0.5rem; }
+  .card { padding: 1rem; }
+}
+
+/* --------------------------------------------------------------
+   Accessibility – Focus Styles
+   -------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------
+   AOS (Animate On Scroll) Overrides – Subtle Glass Fade
+   -------------------------------------------------------------- */
+[data-aos] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: var(--transition-medium);
+}
+[data-aos].aos-animate {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------
+   End of Stylesheet
+   -------------------------------------------------------------- */
